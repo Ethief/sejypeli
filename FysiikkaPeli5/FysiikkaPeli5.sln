@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FysiikkaPeli5", "FysiikkaPeli5\FysiikkaPeli5\FysiikkaPeli5.csproj", "{F79AEB0B-F4F3-4D5C-93F2-AB2907552450}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "FysiikkaPeli5Content", "FysiikkaPeli5\FysiikkaPeli5Content\FysiikkaPeli5Content.contentproj", "{119C7290-71DC-4F27-94C8-50D5F2ED51A7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F79AEB0B-F4F3-4D5C-93F2-AB2907552450}.Debug|x86.ActiveCfg = Debug|x86
+		{F79AEB0B-F4F3-4D5C-93F2-AB2907552450}.Debug|x86.Build.0 = Debug|x86
+		{F79AEB0B-F4F3-4D5C-93F2-AB2907552450}.Release|x86.ActiveCfg = Release|x86
+		{F79AEB0B-F4F3-4D5C-93F2-AB2907552450}.Release|x86.Build.0 = Release|x86
+		{119C7290-71DC-4F27-94C8-50D5F2ED51A7}.Debug|x86.ActiveCfg = Debug|x86
+		{119C7290-71DC-4F27-94C8-50D5F2ED51A7}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
