@@ -11,7 +11,7 @@ public class DrakNest : PhysicsGame
     Image SteveKuva = LoadImage("Steve");
     Image BlokinKuva = LoadImage("Kentanaita");
     PlatformCharacter Steve;
-    AssaultRifle pelaajanase;
+    LaserGun pelaajanase;
     public override void Begin()
     {
        
@@ -26,39 +26,35 @@ public class DrakNest : PhysicsGame
         Keyboard.Listen(Key.Space, ButtonState.Down, AmmuAseella, "Ammu", pelaajanase);
         PhoneBackButton.Listen(ConfirmExit, "Lopeta peli");
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
-        Keyboard.Listen(Key.A, ButtonState.Down, LiikutaPelaajaa, null, new Vector(-200, 0));
+        Keyboard.Listen(Key.A, ButtonState.Down, LiikutaPelaajaa, null, -200);
         Keyboard.Listen(Key.D, ButtonState.Down,
-        LiikutaPelaajaa, null, new Vector(200, 0));
+        LiikutaPelaajaa, null, 200);
         Keyboard.Listen(Key.W, ButtonState.Down,
-        LiikutaPelaajaa, null, new Vector(0, 200));
-        Keyboard.Listen(Key.S, ButtonState.Down,
-        LiikutaPelaajaa, null, new Vector(0, -200)); 
-        Keyboard.Listen(Key.D, ButtonState.Released,
-        LiikutaPelaajaa, null, new Vector(0, 0));
-        Keyboard.Listen(Key.W, ButtonState.Released,
-        LiikutaPelaajaa, null, new Vector(0, 0));
+        Ylos, null);
         Keyboard.Listen(Key.S, ButtonState.Released,
-        LiikutaPelaajaa, null, new Vector(-0, 0));
-        Keyboard.Listen(Key.A, ButtonState.Released,
-        LiikutaPelaajaa, null, new Vector(-0, 0));
+        Alas, null);
+        
 
 
 
 
 
     }
-    void LiikutaPelaajaa(Vector vector)
+    void LiikutaPelaajaa(int suunta)
     {
-        Steve.Walk(-100); 
+        Steve.Walk(suunta);
 
     }
-    void LiikutaPelaajaaOikea(Vector vector)
+    void Ylos()
     {
-        Steve.Walk(100);
-    
-    
-    
+        Steve.Hit(new Vector(0, 50));
     }
+     void Alas() 
+     {
+     
+     Steve.Hit(new Vector(0, -100));
+     
+     }         
     void Kentta()
     {
         ColorTileMap Ruudut = ColorTileMap.FromLevelAsset("Kentta");
@@ -93,13 +89,13 @@ public class DrakNest : PhysicsGame
 
 
     }
-    void AmmuAseella(AssaultRifle ase)
+    void AmmuAseella(LaserGun ase)
     {
         PhysicsObject ammus = ase.Shoot();
 
         if (ammus != null)
         {
-            ammus.Size *= 0.5;
+            ammus.Size *= 0.3;
             //ammus.Image = ...
             ammus.MaximumLifetime = TimeSpan.FromSeconds(5.0);
         }
@@ -110,11 +106,12 @@ public class DrakNest : PhysicsGame
     {
         Steve = new PlatformCharacter(15, 15);
         Steve.Position = paikka;
-        pelaajanase = new AssaultRifle(15.0, 10.0);
+        pelaajanase = new LaserGun(10, 5); 
         pelaajanase.Ammo.Value = 10; 
         Steve.Image = SteveKuva;
         pelaajanase.ProjectileCollision = AmmusOsui;
-        Steve.Add(pelaajanase);
+        //Steve.Add(pelaajanase) 
+        Steve.Weapon= pelaajanase;  
         Add(Steve);
         Camera.Follow(Steve);
         Camera.ZoomFactor = 10; 
@@ -122,24 +119,17 @@ public class DrakNest : PhysicsGame
     
     
     }
-    //void CreateMonster()
-
-    //PhysicsObject Monster = new PhysicsObject(60, 60);
-    //Monster.Shape = Shape.Circle; 
-
-
-    //RandomMoverBrain MonsterBarain = new RandomMoverBrain(220);
-    //MonsterBarain.ChangeMovementSeconds = 2;
-    //Monster.Brain = MonsterBarain;
-
-    //Add(Monster); 
+    void CreateMonster()
+    {
+        Add(Monster);
+        PhysicsObject Monster = new PhysicsObject(60, 60);
+        Monster.Shape = Shape.Circle;
 
 
+        RandomMoverBrain MonsterBarain = new RandomMoverBrain(220);
+        MonsterBarain.ChangeMovementSeconds = 2;
+        Monster.Brain = MonsterBarain;
+       
+    }
 
-
-    //AddCollisionHandler<Surface, PhysicsObject>(VasenReuna, Steve);
-
-
-    //void Tormaus(PhysicsObject reuna, PhysicsObject kohde)
-    //{ 
 }
