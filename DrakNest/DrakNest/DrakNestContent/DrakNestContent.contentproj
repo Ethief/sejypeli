@@ -59,15 +59,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dark Music - The Sealed Kingdom.mp3">
-      <Name>Dark Music - The Sealed Kingdom</Name>
-      <Importer>Mp3Importer</Importer>
-      <Processor>SongProcessor</Processor>
+    <Compile Include="Kentanaita.png">
+      <Name>Kentanaita</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Kentanaita.png">
-      <Name>Kentanaita</Name>
+    <Compile Include="Monsteri.png">
+      <Name>Monsteri</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

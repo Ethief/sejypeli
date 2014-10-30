@@ -7,20 +7,20 @@ using Jypeli.Effects;
 using Jypeli.Widgets;
 
 public class DrakNest : PhysicsGame
-{
+{    
+    Image Monsteri = LoadImage("Monsteri");
     Image SteveKuva = LoadImage("Steve");
     Image BlokinKuva = LoadImage("Kentanaita");
     PlatformCharacter Steve;
-    LaserGun pelaajanase;
+    AssaultRifle pelaajanase;
     public override void Begin()
     {
-       
-        
+
+        Gravity = new Vector(0, -1000);
         SmoothTextures = false;
-        MediaPlayer.Play("Dark Music - The Sealed Kingdom");
         Kentta();
 
-        //CreateMonster();
+       
 
 
         Keyboard.Listen(Key.Space, ButtonState.Down, AmmuAseella, "Ammu", pelaajanase);
@@ -52,7 +52,7 @@ public class DrakNest : PhysicsGame
      void Alas() 
      {
      
-     Steve.Hit(new Vector(0, -100));
+     //Steve.Hit(new Vector(0, -1000));
      
      }         
     void Kentta()
@@ -60,8 +60,11 @@ public class DrakNest : PhysicsGame
         ColorTileMap Ruudut = ColorTileMap.FromLevelAsset("Kentta");
         Ruudut.SetTileMethod(Color.FromHexCode("#000000"), LuoTaso);
         Ruudut.SetTileMethod(Color.FromHexCode("#FF6A00"), LuoPelaaja);
+        Ruudut.SetTileMethod(Color.FromHexCode("#FF0000"), CreateMonster);
         Ruudut.Execute(20, 20);
+       
         Level.Background.Color = Color.Gray;
+        
 
 
     }
@@ -85,11 +88,15 @@ public class DrakNest : PhysicsGame
     void AmmusOsui(PhysicsObject ammus, PhysicsObject kohde)
     {
         ammus.Destroy();
+        
+        if (kohde.Tag == "Monsteri")
+        {
 
-
+            kohde.Destroy();
+        }
 
     }
-    void AmmuAseella(LaserGun ase)
+    void AmmuAseella(AssaultRifle ase)
     {
         PhysicsObject ammus = ase.Shoot();
 
@@ -104,32 +111,44 @@ public class DrakNest : PhysicsGame
     } 
     void LuoPelaaja(Vector paikka, double korkeus, double leveys) 
     {
-        Steve = new PlatformCharacter(15, 15);
+        Steve = new PlatformCharacter(15, 30);
         Steve.Position = paikka;
-        pelaajanase = new LaserGun(10, 5); 
-        pelaajanase.Ammo.Value = 10; 
-        Steve.Image = SteveKuva;
+        pelaajanase = new AssaultRifle(15, 5); 
+         
+        Steve.Image = SteveKuva; 
         pelaajanase.ProjectileCollision = AmmusOsui;
         //Steve.Add(pelaajanase) 
-        Steve.Weapon= pelaajanase;  
+        Steve.Weapon = pelaajanase;
+        AddCollisionHandler(Steve, "Monsteri", TormaaMonsteriin);
+        
         Add(Steve);
         Camera.Follow(Steve);
-        Camera.ZoomFactor = 10; 
+        Camera.ZoomFactor = 2; 
 
     
     
     }
-    void CreateMonster()
+    void CreateMonster(Vector paikka, double korkeus, double leveys)
     {
+        
+        PhysicsObject Monster = new PhysicsObject(leveys, korkeus);
         Add(Monster);
-        PhysicsObject Monster = new PhysicsObject(60, 60);
+        Monster.Position = paikka;
         Monster.Shape = Shape.Circle;
-
+        Monster.Image = Monsteri;
+        Monster.Tag = "Monsteri"; 
 
         RandomMoverBrain MonsterBarain = new RandomMoverBrain(220);
         MonsterBarain.ChangeMovementSeconds = 2;
         Monster.Brain = MonsterBarain;
        
     }
-
+    void TormaaMonsteriin(PhysicsObject Tormaaja, PhysicsObject Kohde)
+    {
+     Tormaaja.Destroy();
+     
+    
+    
+    
+    }
 }
