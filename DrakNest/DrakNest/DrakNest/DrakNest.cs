@@ -151,4 +151,17 @@ public class DrakNest : PhysicsGame
     
     
     }
+    void LuoAikaLaskuri()
+    {
+    Timer.SingleShot(30.0 LisaaVihollinen);
+    
+    
+    
+    }
+    void LisaaVihollinen
+    {  
+    
+    
+    
+    }
 }
