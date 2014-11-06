@@ -6,19 +6,25 @@ using Jypeli.Controls;
 using Jypeli.Effects;
 using Jypeli.Widgets;
 
-public class DrakNest : PhysicsGame
+public class DrakNest : PhysicsGame 
 {    
     Image Monsteri = LoadImage("Monsteri");
     Image SteveKuva = LoadImage("Steve");
     Image BlokinKuva = LoadImage("Kentanaita");
     PlatformCharacter Steve;
-    AssaultRifle pelaajanase;
-    public override void Begin()
+    Image TaustaKuva = LoadImage("BR");
+    AssaultRifle pelaajanase;  
+    private Image[] ukkelinKavely = LoadImages("Steve1", "Steve2", "Steve3");
+    List<Vector> Spawnipaikat = new List<Vector>();
+    IntMeter IntMeter1;
+    PhysicsObject Blokki;
+    public override void Begin()  
     {
-
+        //ukkelinkavely = LoadAnimation("SteveAnim");
         Gravity = new Vector(0, -1000);
-        SmoothTextures = false;
+        SmoothTextures = false; 
         Kentta();
+        LuoPistelaskuri();
 
        
 
@@ -33,16 +39,21 @@ public class DrakNest : PhysicsGame
         Ylos, null);
         Keyboard.Listen(Key.S, ButtonState.Released,
         Alas, null);
-        
-
+        Keyboard.Listen(Key.A, ButtonState.Released, LopetaAnimointi, null);
+        Keyboard.Listen(Key.D, ButtonState.Released, LopetaAnimointi, null);
 
 
 
 
     }
+    void LopetaAnimointi()
+    {
+        Steve.Animation.Stop();
+    }
     void LiikutaPelaajaa(int suunta)
     {
         Steve.Walk(suunta);
+        if (!Steve.Animation.IsPlaying) Steve.Animation.Start();
 
     }
     void Ylos()
@@ -60,17 +71,21 @@ public class DrakNest : PhysicsGame
         ColorTileMap Ruudut = ColorTileMap.FromLevelAsset("Kentta");
         Ruudut.SetTileMethod(Color.FromHexCode("#000000"), LuoTaso);
         Ruudut.SetTileMethod(Color.FromHexCode("#FF6A00"), LuoPelaaja);
-        Ruudut.SetTileMethod(Color.FromHexCode("#FF0000"), CreateMonster);
+        Ruudut.SetTileMethod(Color.FromHexCode("#FF0000"), LisaaVihollinen);
         Ruudut.Execute(20, 20);
+        LuoAikaLaskuri(20.0);
+        Level.Background.Image = TaustaKuva;
+        Level.Background.FitToLevel();
+
        
-        Level.Background.Color = Color.Gray;
+        
         
 
 
     }
     void LuoTaso(Vector paikka, double leveys, double korkeus)
     {
-        PhysicsObject Blokki = PhysicsObject.CreateStaticObject(leveys, korkeus);
+        Blokki = PhysicsObject.CreateStaticObject(leveys, korkeus);
         Blokki.Position = paikka;
         Blokki.Image = BlokinKuva;
         Add(Blokki);
@@ -87,7 +102,13 @@ public class DrakNest : PhysicsGame
     //}
     void AmmusOsui(PhysicsObject ammus, PhysicsObject kohde)
     {
-        ammus.Destroy();
+        ammus.Destroy(); 
+        
+        if (kohde == Blokki)
+        {
+            return;
+        }
+        IntMeter1.Value += 1;
         
         if (kohde.Tag == "Monsteri")
         {
@@ -120,48 +141,93 @@ public class DrakNest : PhysicsGame
         //Steve.Add(pelaajanase) 
         Steve.Weapon = pelaajanase;
         AddCollisionHandler(Steve, "Monsteri", TormaaMonsteriin);
-        
+        Steve.Animation = new Animation(ukkelinKavely);
         Add(Steve);
         Camera.Follow(Steve);
         Camera.ZoomFactor = 2; 
 
     
     
-    }
-    void CreateMonster(Vector paikka, double korkeus, double leveys)
-    {
-        
-        PhysicsObject Monster = new PhysicsObject(leveys, korkeus);
-        Add(Monster);
-        Monster.Position = paikka;
-        Monster.Shape = Shape.Circle;
-        Monster.Image = Monsteri;
-        Monster.Tag = "Monsteri"; 
-
-        RandomMoverBrain MonsterBarain = new RandomMoverBrain(220);
-        MonsterBarain.ChangeMovementSeconds = 2;
-        Monster.Brain = MonsterBarain;
+  
+  
        
     }
     void TormaaMonsteriin(PhysicsObject Tormaaja, PhysicsObject Kohde)
     {
      Tormaaja.Destroy();
+     IntMeter1.Value+= 1;
      
     
     
     
     }
-    void LuoAikaLaskuri()
+    void LuoAikaLaskuri(double aika)
     {
-    Timer.SingleShot(30.0 LisaaVihollinen);
+        Timer ajastin = new Timer();
+        ajastin.Interval = aika;
+        ajastin.Timeout += LisaaVihollisia;
+        ajastin.Start();
     
     
     
     }
-    void LisaaVihollinen
-    {  
-    
-    
-    
+    void LisaaVihollinen(Vector paikka, double leveys, double korkeus)
+    { 
+        /*PhysicsObject Monster = new PhysicsObject(leveys, korkeus);
+        Add(Monster);
+        Monster.Position = paikka;
+        Monster.Shape = Shape.Circle;
+        Monster.Image = Monsteri;
+        Monster.Tag = "Monsteri";
+
+        RandomMoverBrain MonsterBarain = new RandomMoverBrain(220);
+        MonsterBarain.ChangeMovementSeconds = 2;
+        Monster.Brain = MonsterBarain;
+    */
+        Spawnipaikat.Add(paikka);
     }
+    void LisaaVihollisia()
+    {
+
+        foreach (Vector paikka in Spawnipaikat)
+        {
+            PhysicsObject Monster = new PhysicsObject(40, 40);
+            Add(Monster);
+            Monster.Position = paikka;
+            Monster.Shape = Shape.Circle;
+            Monster.Image = Monsteri;
+            Monster.Tag = "Monsteri";
+
+            RandomMoverBrain MonsterBarain = new RandomMoverBrain(220);
+            MonsterBarain.ChangeMovementSeconds = 2;
+            Monster.Brain = MonsterBarain;
+        }
+    } 
+    void LuoPistelaskuri() 
+    {
+       IntMeter1 = new IntMeter(0);
+            Label pisteNaytto = new Label();
+            pisteNaytto.X = Screen.Left + 100;
+            pisteNaytto.Y = Screen.Top - 100;
+            pisteNaytto.TextColor = Color.Red;
+            pisteNaytto.Color = Color.White;
+
+            pisteNaytto.BindTo(IntMeter1);
+            Add(pisteNaytto);      
+    } 
+
+
+
+
+
 }
+     
+     
+
+
+
+     
+
+
+
+
