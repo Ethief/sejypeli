@@ -26,6 +26,10 @@ public class DrakNest : PhysicsGame
         Kentta();
         LuoPistelaskuri();
 
+        MultiSelectWindow alkuValikko = new MultiSelectWindow("Pelin alkuvalikko",
+        "Aloita peli", "Parhaat pisteet", "Lopeta");
+        Add(alkuValikko);
+
        
 
 
@@ -88,6 +92,7 @@ public class DrakNest : PhysicsGame
         Blokki = PhysicsObject.CreateStaticObject(leveys, korkeus);
         Blokki.Position = paikka;
         Blokki.Image = BlokinKuva;
+        Blokki.Tag = "Seina";
         Add(Blokki);
 
     }
@@ -104,7 +109,7 @@ public class DrakNest : PhysicsGame
     {
         ammus.Destroy(); 
         
-        if (kohde == Blokki)
+        if (kohde.Tag == "Seina")
         {
             return;
         }
