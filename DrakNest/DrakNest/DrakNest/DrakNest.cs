@@ -25,6 +25,12 @@ public class DrakNest : PhysicsGame
         SmoothTextures = false; 
         Kentta();
         LuoPistelaskuri();
+        IsPaused = true;
+        Pause();
+        MediaPlayer.Play("TristTram");
+        MediaPlayer.IsRepeating = true;
+
+
 
         MultiSelectWindow alkuValikko = new MultiSelectWindow("Pelin alkuvalikko",
         "Aloita peli", "Parhaat pisteet", "Lopeta");
@@ -45,6 +51,7 @@ public class DrakNest : PhysicsGame
         Alas, null);
         Keyboard.Listen(Key.A, ButtonState.Released, LopetaAnimointi, null);
         Keyboard.Listen(Key.D, ButtonState.Released, LopetaAnimointi, null);
+        Keyboard.Listen(Key.E, ButtonState.Pressed, Pause, "Pysäyttää pelin");
 
 
 
